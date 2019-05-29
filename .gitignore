@@ -1,0 +1,6 @@
+node_modules
+dist/js
+dist.crx
+dist.pem
+package-lock.json
+.vscode/launch.json
