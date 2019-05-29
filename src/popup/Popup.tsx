@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { openApp as sendToRoku } from "../roku";
 import { IVideo } from "../video";
 import "./Popup.scss";

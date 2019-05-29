@@ -2,9 +2,6 @@ import { IVideo } from "./video";
 const videos: IVideo[] = [];
 
 setInterval(() => {
-  // tslint:disable-next-line: no-console
-  // console.log(`looking for video tags`);
-
   const iframes = Array.from(document.getElementsByTagName("iframe"));
   for (const iframe of iframes) {
     try {
