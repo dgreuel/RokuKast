@@ -5,7 +5,7 @@
 ## Building
 
 1.  Clone repo
-2.  `yarn add`
+2.  `yarn install`
 3.  `yarn dev` to compile once or `yarn watch` to run the dev task in watch mode
 4.  `yarn build` to build a production (minified) version
 
