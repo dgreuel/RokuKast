@@ -39,7 +39,6 @@ export function openApp(msg) {
             encodeURIComponent(xhr.responseURL) +
             "&videoName=" +
             encodeURIComponent(title) +
-            "&k=(null)" +
             "&videoFormat=" +
             (isHLS ? "hls" : "mp4");
           const method = "POST";
