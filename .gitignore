@@ -3,3 +3,4 @@ dist.crx
 dist.pem
 package-lock.json
 .vscode/launch.json
+.pnp*
