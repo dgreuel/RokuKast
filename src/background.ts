@@ -1,7 +1,11 @@
 import * as _ from "lodash";
+import Event from './event';
 import { IVideo } from "./video";
 let videos: IVideo[] = [];
 
+/**
+ * Attempt to detect media requests.
+ */
 chrome.webRequest.onBeforeRequest.addListener(
   (info) => {
     if (
@@ -9,6 +13,7 @@ chrome.webRequest.onBeforeRequest.addListener(
       info.url.match(/input\/15985/) || // don't capture requests to Roku
       !info.url.match(/\.(m3u)|(mp4)/) // only look for valid video formats
     ) {
+      // console.log("NAW dude! " + info.url)
       return { redirectUrl: info.url };
     }
 
@@ -51,7 +56,7 @@ chrome.webRequest.onBeforeRequest.addListener(
 );
 
 chrome.runtime.onMessage.addListener((message, sender) => {
-  if (message.type === "add-video") {
+  if (message.type === Event.ADD_VIDEO) {
     {
       chrome.tabs.query({ currentWindow: true, active: true }, (tabs) => {
         const tabId = tabs[0].id;

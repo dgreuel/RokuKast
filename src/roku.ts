@@ -1,61 +1,63 @@
-export function openApp(msg) {
-  // tslint:disable-next-line: no-console
-  console.dir(msg);
-  if (localStorage.ipAddress !== undefined) {
-    chrome.tabs.query(
-      { active: true, windowType: "normal", currentWindow: true },
-      (tabs) => {
-        const ip = localStorage.ipAddress;
-        const title = msg.title;
-        const favIconURL = tabs[0].favIconUrl;
-        // tslint:disable-next-line: no-console
-        console.log(tabs);
-        // tslint:disable-next-line: no-console
-        console.log(title);
-        // tslint:disable-next-line: no-console
-        console.log(favIconURL);
+interface RokuRequest {
+  title: string;
+  sentLink: string;
+}
 
-        let isHLS = msg.sentLink.indexOf("m3u") !== -1;
-        const isPlexStream =
-          msg.sentLink.indexOf("&mediaIndex=0&partIndex=0&protocol=http") !==
-          -1;
+enum Format {
+  HLS="hls",
+  MP4="mp4"
+}
 
-        if (isPlexStream) {
-          msg.sentLink.replace(
-            new RegExp("&mediaIndex=0&partIndex=0&protocol=http", "g"),
-            "&mediaIndex=0&partIndex=0&protocol=hls",
-          );
-          isHLS = true;
-        }
+/**
+ * Post the video request information to the Roku
+ * @param rokuRequest video information
+ * @param ip ip address of the roku
+ * @param format the video format
+ */
+function sendXhrRequest(rokuRequest: RokuRequest, ip: string, format: Format) {
+  const xhr = new XMLHttpRequest();
+  xhr.open("HEAD", rokuRequest.sentLink, true);
+  xhr.onload = () => {
+    const u = encodeURIComponent(xhr.responseURL);
+    const videoName = encodeURIComponent(rokuRequest.title);
+    //not sure where this is documented, but would be good to know
+    const url = `http://${ip}:8060/input/15985?t=v&u=${u}&videoName=${videoName}&videoFormat=${format}`;
+    const request = new XMLHttpRequest();
+    request.open("POST", url, true);
+    request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    request.send("");
+  };
+  xhr.send(null);
+}
 
-        const xhr = new XMLHttpRequest();
-        xhr.open("HEAD", msg.sentLink, true);
-        xhr.onload = () => {
-          const url =
-            "http://" +
-            ip +
-            ":8060/input/15985?t=v" +
-            "&u=" +
-            encodeURIComponent(xhr.responseURL) +
-            "&videoName=" +
-            encodeURIComponent(title) +
-            "&videoFormat=" +
-            (isHLS ? "hls" : "mp4");
-          const method = "POST";
-          const postData = "";
-          const async = true;
+/**
+ * Determine the format of the video.
+ * TODO: understand this.
+ * @param rokuRequest 
+ */
+function getVideoFormat(rokuRequest: RokuRequest) : Format {
+  let isHLS = rokuRequest.sentLink.indexOf("m3u") !== -1;
+  const isPlexStream = rokuRequest.sentLink.indexOf("&mediaIndex=0&partIndex=0&protocol=http") !== -1;
 
-          const request = new XMLHttpRequest();
-          request.open(method, url, async);
-          request.setRequestHeader(
-            "Content-Type",
-            "application/json;charset=UTF-8",
-          );
-          request.send(postData);
-        };
-        xhr.send(null);
-      },
+  if (isPlexStream) {
+    rokuRequest.sentLink.replace(
+      new RegExp("&mediaIndex=0&partIndex=0&protocol=http", "g"),
+      "&mediaIndex=0&partIndex=0&protocol=hls",
     );
+    isHLS = true;
+  }
+  return isHLS ? Format.HLS : Format.MP4;
+}
+
+/**
+ * Sends a video request to the configured roku.
+ */
+export function sendToRoku(rokuRequest: RokuRequest) {
+  // tslint:disable-next-line: no-console
+  console.dir(rokuRequest);
+  if (localStorage.ipAddress !== undefined) {
+    const format: Format = getVideoFormat(rokuRequest);
+    sendXhrRequest(rokuRequest, localStorage.ipAddress, format);
   } else {
     alert("Please set your roku ip in options page");
   }

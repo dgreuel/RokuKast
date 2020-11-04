@@ -1,5 +1,5 @@
+import Event from './event';
 import { IVideo } from "./video";
-const videos: IVideo[] = [];
 
 setInterval(() => {
   const iframes = Array.from(document.getElementsByTagName("iframe"));
@@ -26,7 +26,7 @@ setInterval(() => {
               timeStamp: 0,
             };
             if (!!video.url && !!video.title) {
-              chrome.runtime.sendMessage({ type: "add-video", video });
+              chrome.runtime.sendMessage({ type: Event.ADD_VIDEO, video });
             }
           }
         }

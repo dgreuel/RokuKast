@@ -1,6 +1,7 @@
 node_modules
 dist.crx
 dist.pem
+dist
 package-lock.json
 .vscode/launch.json
 .pnp*
