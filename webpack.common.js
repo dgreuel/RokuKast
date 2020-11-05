@@ -1,23 +1,49 @@
 const path = require("path");
-const PnpWebpackPlugin = require(`pnp-webpack-plugin`);
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
    entry: {
-      popup: path.join(__dirname, "src/popup/index.tsx"),
-      background: path.join(__dirname, "src/background.ts"),
-      contentScript: path.join(__dirname, "src/contentScript.ts")
+      popup: path.resolve(__dirname, "src/popup/index.tsx"),
+      background: path.resolve(__dirname, "src/background.ts"),
+      contentScript: path.resolve(__dirname, "src/contentScript.ts")
    },
    output: {
-      path: path.join(__dirname, "dist/js"),
+      path: path.resolve(__dirname, 'dist'),
       filename: "[name].js"
    },
+   plugins: [
+      new CopyWebpackPlugin({
+         patterns: [
+            {
+               from: "src/*.json",
+               flatten: true
+            },
+            {
+               from: "src/*.html",
+               flatten: true
+            },
+            {
+               from: "src/*.js",
+               flatten: true
+            },
+            {
+               from: "src/*.png",
+               flatten: true
+            }
+         ]
+      })
+   ],
    module: {
       rules: [
          {
             exclude: /(node_modules)|(dist)/,
+            test: /\.(html|json)$/,
+            loader: "file-loader",
+         },
+         {
+            exclude: /(node_modules)|(dist)/,
             test: /\.t|jsx?$/,
             loader: require.resolve("ts-loader"),
-            options: PnpWebpackPlugin.tsLoaderOptions({})
          },
          {
             exclude: /node_modules/,
@@ -37,10 +63,6 @@ module.exports = {
       ]
    },
    resolve: {
-      extensions: [".ts", ".tsx", ".js"],
-      plugins: [PnpWebpackPlugin]
-   },
-   resolveLoader: {
-      plugins: [PnpWebpackPlugin.moduleLoader(module)]
+      extensions: [".ts", ".tsx", ".js", ".html",".json"]
    }
 };
