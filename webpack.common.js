@@ -22,10 +22,6 @@ module.exports = {
             {
                from: "images/**",
                context: "src/"
-            },
-            {
-               from: "static/**",
-               context: "src/"
             }
          ]
       })
@@ -55,6 +51,6 @@ module.exports = {
       ]
    },
    resolve: {
-      extensions: [".ts", ".tsx", ".js", ".html",".json"]
+      extensions: [".ts", ".tsx", ".js", ".html", ".json"]
    }
 };
