@@ -4,6 +4,7 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 module.exports = {
    entry: {
       popup: path.resolve(__dirname, "src/popup/index.tsx"),
+      options: path.resolve(__dirname, "src/options/index.tsx"),
       background: path.resolve(__dirname, "src/background.ts"),
       contentScript: path.resolve(__dirname, "src/contentScript.ts")
    },
@@ -16,6 +17,10 @@ module.exports = {
          patterns: [
             {
                from: "manifest.json",
+               context: "src/"
+            },
+            {
+               from: "images/**",
                context: "src/"
             },
             {

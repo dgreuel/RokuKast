@@ -4,7 +4,7 @@
     "description": "A Chrome extension to stream web videos to Roku devices.",
     "version": "0.0.2",
     "browser_action": {
-      "default_icon": "static/images/icon16.png",
+      "default_icon": "images/icon16.png",
       "default_popup": "static/popup.html"
     },
     "background": {
@@ -26,9 +26,9 @@
     ],
     "options_page": "static/options.html",
     "icons": {
-      "16": "static/images/icon16.png",
-      "48": "static/images/icon48.png",
-      "128": "static/images/icon128.png"
+      "16": "images/icon16.png",
+      "48": "images/icon48.png",
+      "128": "images/icon128.png"
     },
     "permissions": [
       "webRequest",

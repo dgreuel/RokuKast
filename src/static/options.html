@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
    <head>
@@ -12,42 +11,11 @@
          href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css"
          rel="stylesheet"
       />
-      <script src="jquery.js"></script>
-      <script src="ssdp.js"></script>
+      <script src="../options.js"></script>
       <title>RokuCast Options</title>
    </head>
 
    <body>
-      <form class="center-block text-center padding-top-lg input-group">
-         <p>
-            <label for="devices"
-               >Select your device (requires
-               <a
-                  href="https://chrome.google.com/webstore/detail/ssdp-provider/pfdiljjcookjofjbjnbnkgfnfmnoljmk"
-                  >ssdp-provider</a
-               >)</label
-            >
-            <select id="devices">
-               <!-- If detected, other options will be appended here -->
-            </select>
-         </p>
-
-         <p>
-            <label for="ip_address">... or enter an IP address manually</label>
-            <input id="ip_address" class="text-center input-medium" />
-         </p>
-      </form>
-
-      <div class="status hidden" id="status">Options saved.</div>
-      <div class="settingsbuttons">
-         <button class="btn btn-default btn-sm" id="save">
-            <i class="fa fa-save"></i> Save
-         </button>
-         <a class="btn btn-default btn-sm" href="popup.html"
-            ><i class="fa fa-arrow-left"></i> Go back</a
-         >
-      </div>
-
-      <script src="options.js"></script>
+      <div id="options"></div>
    </body>
 </html>
