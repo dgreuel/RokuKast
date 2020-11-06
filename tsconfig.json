@@ -4,11 +4,10 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "rootDir": "src",
-    "outDir": "dist/js",
+    "outDir": "dist",
     "sourceMap": true,
     "jsx": "react",
     "lib": ["es2015", "dom"],
-    "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "allowJs": true,
     "types": ["jquery", "chrome", "react"]

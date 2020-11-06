@@ -15,31 +15,18 @@ module.exports = {
       new CopyWebpackPlugin({
          patterns: [
             {
-               from: "src/*.json",
-               flatten: true
+               from: "manifest.json",
+               context: "src/"
             },
             {
-               from: "src/*.html",
-               flatten: true
-            },
-            {
-               from: "src/*.js",
-               flatten: true
-            },
-            {
-               from: "src/*.png",
-               flatten: true
+               from: "static/**",
+               context: "src/"
             }
          ]
       })
    ],
    module: {
       rules: [
-         {
-            exclude: /(node_modules)|(dist)/,
-            test: /\.(html|json)$/,
-            loader: "file-loader",
-         },
          {
             exclude: /(node_modules)|(dist)/,
             test: /\.t|jsx?$/,
