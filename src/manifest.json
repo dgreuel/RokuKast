@@ -1,39 +1,37 @@
 {
-    "manifest_version": 2,
-    "name": "RokuKast",
-    "description": "A Chrome extension to stream web videos to Roku devices.",
-    "version": "0.0.2",
-    "browser_action": {
-      "default_icon": "images/icon16.png",
-      "default_popup": "static/popup.html"
-    },
-    "background": {
-      "scripts": [
-        "background.js"
-      ],
-      "persistent": true
-    },
-    "content_scripts": [
-      {
-        "matches": [
-          "http://*/*",
-          "https://*/*"
-        ],
-        "js": [
-          "contentScript.js"
-        ]
-      }
+  "manifest_version": 2,
+  "name": "RokuKast",
+  "version": "0.0.2",
+  "description": "A Chrome extension to stream web videos to Roku devices.",
+  "icons": {
+    "16": "images/icon16.png",
+    "48": "images/icon48.png",
+    "128": "images/icon128.png"
+  },
+  "browser_action": {
+    "default_icon": "images/icon16.png",
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "scripts": [
+      "background.js"
     ],
-    "options_page": "static/options.html",
-    "icons": {
-      "16": "images/icon16.png",
-      "48": "images/icon48.png",
-      "128": "images/icon128.png"
-    },
-    "permissions": [
-      "webRequest",
-      "tabs",
-      "http://*/*",
-      "https://*/*"
-    ]
-  } 
+    "persistent": true
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*/*"
+      ],
+      "js": [
+        "contentScript.js"
+      ]
+    }
+  ],
+  "options_page": "options.html",
+  "permissions": [
+    "webRequest",
+    "tabs",
+    "*://*/*"
+  ]
+}

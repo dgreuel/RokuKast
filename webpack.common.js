@@ -22,6 +22,10 @@ module.exports = {
             {
                from: "images/**",
                context: "src/"
+            },
+            {
+               from: "*.html",
+               context: "src/"
             }
          ]
       })

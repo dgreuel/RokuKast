@@ -1,5 +1,5 @@
-import Event from './event';
-import { IVideo } from "./video";
+import Event from './shared/event';
+import { IVideo } from "./shared/video";
 
 function handleVideoElement(videoElement: HTMLVideoElement) {
   const videoUrl = videoElement.src;
@@ -23,20 +23,20 @@ function handleVideoElement(videoElement: HTMLVideoElement) {
 
 function handleIframeElement(iframe: HTMLIFrameElement) {
   try {
-    if(iframe.src) {
+    if (iframe.src) {
       console.log(`iframe detected: ${iframe.src}`);
     }
     chrome.runtime.sendMessage({ type: Event.IFRAME, src: iframe.src });
-    try{ 
+    try {
       //this can throw?
       if (iframe.contentDocument) handleDocument(iframe.contentDocument);
-    }catch(e) {
+    } catch (e) {
       console.error(e);
     }
-    try{ 
+    try {
       //this can maybe also throw?
-      if(iframe.contentWindow.document) handleDocument(iframe.contentWindow.document);
-    }catch(e) {
+      if (iframe.contentWindow.document) handleDocument(iframe.contentWindow.document);
+    } catch (e) {
       console.error(e);
     }
   } catch (e) {
@@ -45,7 +45,7 @@ function handleIframeElement(iframe: HTMLIFrameElement) {
 }
 
 function handleDocument(document: Document) {
-  try{
+  try {
     const iframes: HTMLIFrameElement[] = Array.from(document.getElementsByTagName("iframe"));
     const videoElements: HTMLVideoElement[] = Array.from(document.getElementsByTagName("video"));
     for (const iframe of iframes) {
@@ -54,7 +54,7 @@ function handleDocument(document: Document) {
     for (const videoElement of videoElements) {
       handleVideoElement(videoElement);
     }
-  }catch(e) {
+  } catch (e) {
     console.error("Failed to handle document: " + e);
   }
 }

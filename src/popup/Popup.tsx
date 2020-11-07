@@ -1,23 +1,15 @@
-import * as _ from "lodash";
 import * as React from "react";
 import { useState } from "react";
-import { sendToRoku as sendToRoku } from "./roku";
-import { IVideo } from "../video";
+import { sendToRoku as sendToRoku } from "../shared/roku";
+import { IVideo } from "../shared/video";
 import "./Popup.scss";
 
-// tslint:disable-next-line: no-empty-interface
-interface IAppProps {}
-
-export const Popup = (props: IAppProps) => {
+export const Popup = () => {
   const [filteredVideos, setFilteredVideos] = useState([]);
   const videos = JSON.parse(localStorage.getItem("videos"));
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const currentTabId = tabs[0].id;
-    setFilteredVideos(
-      _.sortBy(videos, (vid) => vid.timeStamp * -1).filter((video: IVideo) => {
-        return video.tabId === currentTabId;
-      }),
-    );
+    setFilteredVideos(videos.filter((video) => video.tabId === currentTabId));
   });
   return (
     <>
@@ -26,37 +18,37 @@ export const Popup = (props: IAppProps) => {
         <ul>
           {filteredVideos
             ? filteredVideos.map((video: IVideo, index) => (
-                <li key={`${index}-row`}>
-                  <span className="videoTitle" title={video.url}>
-                    {video.title || "unknown"}
-                  </span>
-                  <span className="detectionMethod">
-                    {video.detectionMethod}
-                  </span>
-                  <span>
-                    <a
-                      key={`${index}-download`}
-                      href={video.url}
-                      title="Download"
-                      target="_blank"
-                    >
-                      <i className="material-icons">file_download</i>
-                    </a>
-                  </span>
-                  <span>
-                    <a
-                      key={`${index}-cast`}
-                      onClick={sendToRoku.bind(this, {
-                        title: video.title,
-                        sentLink: video.url,
-                      })}
-                      title="Cast"
-                    >
-                      <i className="material-icons">cast</i>
-                    </a>
-                  </span>
-                </li>
-              ))
+              <li key={`${index}-row`}>
+                <span className="videoTitle" title={video.url}>
+                  {video.title || "unknown"}
+                </span>
+                <span className="detectionMethod">
+                  {video.detectionMethod}
+                </span>
+                <span>
+                  <a
+                    key={`${index}-download`}
+                    href={video.url}
+                    title="Download"
+                    target="_blank"
+                  >
+                    <i className="material-icons">file_download</i>
+                  </a>
+                </span>
+                <span>
+                  <a
+                    key={`${index}-cast`}
+                    onClick={sendToRoku.bind(this, {
+                      title: video.title,
+                      sentLink: video.url,
+                    })}
+                    title="Cast"
+                  >
+                    <i className="material-icons">cast</i>
+                  </a>
+                </span>
+              </li>
+            ))
             : null}
         </ul>
       </div>
