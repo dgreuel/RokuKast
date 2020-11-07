@@ -1,17 +1,24 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
+    "jsx": "react",
+    "lib": [
+      "es2015",
+      "dom"
+    ],
     "module": "commonjs",
     "moduleResolution": "node",
-    "rootDir": "src",
     "outDir": "dist",
     "sourceMap": true,
-    "jsx": "react",
-    "lib": ["es2015", "dom"],
-    "allowSyntheticDefaultImports": true,
-    "allowJs": true,
-    "types": ["jquery", "chrome", "react"]
+    "target": "es5",
+    "types": [
+      "chrome",
+      "react"
+    ]
   },
-  "exclude": ["node_modules", "dist", "webpack*"]
+  "include": [
+    "src"
+  ]
 }
