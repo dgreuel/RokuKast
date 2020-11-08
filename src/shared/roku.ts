@@ -4,8 +4,8 @@ interface RokuRequest {
 }
 
 enum Format {
-  HLS="hls",
-  MP4="mp4"
+  HLS = "hls",
+  MP4 = "mp4"
 }
 
 /**
@@ -35,8 +35,8 @@ function sendXhrRequest(rokuRequest: RokuRequest, ip: string, format: Format) {
  * TODO: understand this.
  * @param rokuRequest 
  */
-function getVideoFormat(rokuRequest: RokuRequest) : Format {
-  let isHLS = rokuRequest.sentLink.indexOf("m3u") !== -1;
+function getVideoFormat(rokuRequest: RokuRequest): Format {
+  let isHLS = rokuRequest.sentLink.indexOf("m3u") !== -1 || rokuRequest.sentLink.indexOf("hls-vod") !== -1;
   const isPlexStream = rokuRequest.sentLink.indexOf("&mediaIndex=0&partIndex=0&protocol=http") !== -1;
 
   if (isPlexStream) {

@@ -3,22 +3,32 @@ import Event from './shared/event';
 import { IVideo } from "./shared/video";
 let videos: IVideo[] = [];
 
+function detectMediaRequest(url: string) {
+  if (url.endsWith(".ts")) {
+    // don't capture transport stream files (chunks)
+    return false;
+  } else if (url.match(/input\/15985/)) {
+    // don't capture requests to Roku
+    return false;
+  } else if (url.match(/\.(m3u)|(mp4)/) || url.match(/hls-vod/)) {
+    // only look for valid video formats
+    return true;
+  } else {
+    return false;
+  }
+}
+
 /**
  * Attempt to detect media requests.
  */
 chrome.webRequest.onBeforeRequest.addListener(
   (info) => {
-    if (
-      info.url.endsWith(".ts") || // don't capture transport stream files (chunks)
-      info.url.match(/input\/15985/) || // don't capture requests to Roku
-      !info.url.match(/\.(m3u)|(mp4)/) // only look for valid video formats
-    ) {
-      // console.log("NAW dude! " + info.url)
+
+    if (!detectMediaRequest(info.url)) {
       return { redirectUrl: info.url };
     }
 
-    // tslint:disable-next-line: no-console
-    // console.log(`Media request detected: ${info.url}`);
+    console.log(`Media request detected: ${info.url}`);
 
     const tabId = info.tabId;
     if (tabId > 0) {
