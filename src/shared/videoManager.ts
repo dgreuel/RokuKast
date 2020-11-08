@@ -1,5 +1,6 @@
 import _ from "lodash";
 import { IVideo } from "./video";
+import Event from "./event";
 
 /**
  * Module handles storage and retrieval of videos found across all tabs.
@@ -24,7 +25,14 @@ export function pushVideo(video: IVideo): void {
     //why?
     videos = _.uniqBy(
         videos,
-        (vid) => vid.url === video.url,
+        (vid) => vid.url,
     );
     setVideos(videos);
+
+    //figure out how to communicate with other scripts that we have updated the videos
+    chrome.runtime.sendMessage({
+        type: Event.UPDATED_VIDEOS,
+        videos: videos
+    })
+    chrome.browserAction.setBadgeText({ text: videos.length + "" });
 }

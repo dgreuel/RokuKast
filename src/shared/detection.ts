@@ -19,6 +19,9 @@ function detectMediaRequest(url: string) {
         return false;
     } else if (url.match(/\.(m3u)|(mp4)/) || url.match(/hls-vod/)) {
         // only look for valid video formats
+        if (url.match(/mp666Frag/)) {
+            return false;
+        }
         return true;
     } else {
         return false;
