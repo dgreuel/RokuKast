@@ -2,14 +2,13 @@ import * as React from "react";
 import { useState } from "react";
 import { sendToRoku as sendToRoku } from "../shared/roku";
 import { IVideo } from "../shared/video";
+import { getVideos } from "../shared/videoManager";
 import "./Popup.scss";
 
 export const Popup = () => {
   const [filteredVideos, setFilteredVideos] = useState([]);
-  const videos = JSON.parse(localStorage.getItem("videos"));
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    const currentTabId = tabs[0].id;
-    setFilteredVideos(videos.filter((video) => video.tabId === currentTabId));
+    setFilteredVideos(getVideos(tabs[0].id));
   });
   return (
     <>

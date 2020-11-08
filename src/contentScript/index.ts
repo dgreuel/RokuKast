@@ -1,19 +1,22 @@
-import Event from './shared/event';
-import { IVideo } from "./shared/video";
+import Event from '../shared/event';
+import { IVideo } from "../shared/video";
+import { DetectionMethod } from "../shared/detection";
+
+/**
+ * This module handles all of the page-crawling to pull potential videos out of the UI.
+ */
 
 function handleVideoElement(videoElement: HTMLVideoElement) {
   const videoUrl = videoElement.src;
   console.log(`video element detected: ${videoUrl}`);
   if (videoUrl.indexOf("blob:") === -1) {
-    // tslint:disable-next-line: no-console
     const video: IVideo = {
-      detectionMethod: "video tag",
+      detectionMethod: DetectionMethod.VIDEO_TAG,
       title: document.title.substring(
         0,
         document.title.length < 100 ? document.title.length : 99,
       ),
-      url: videoUrl,
-      timeStamp: 0,
+      url: videoUrl
     };
     if (!!video.url && !!video.title) {
       chrome.runtime.sendMessage({ type: Event.ADD_VIDEO, video });
@@ -22,26 +25,15 @@ function handleVideoElement(videoElement: HTMLVideoElement) {
 }
 
 function handleIframeElement(iframe: HTMLIFrameElement) {
-  try {
-    if (iframe.src) {
-      console.log(`iframe detected: ${iframe.src}`);
-    }
-    chrome.runtime.sendMessage({ type: Event.IFRAME, src: iframe.src });
-    try {
-      //this can throw?
-      if (iframe.contentDocument) handleDocument(iframe.contentDocument);
-    } catch (e) {
-      console.error(e);
-    }
-    try {
-      //this can maybe also throw?
-      if (iframe.contentWindow.document) handleDocument(iframe.contentWindow.document);
-    } catch (e) {
-      console.error(e);
-    }
-  } catch (e) {
-    console.error(e);
+  if (iframe.src) {
+    console.log(`iframe detected: ${iframe.src}`);
   }
+  try {
+    if (iframe.contentDocument) handleDocument(iframe.contentDocument);
+  } catch (e) { }
+  try {
+    if (iframe.contentWindow.document) handleDocument(iframe.contentWindow.document);
+  } catch (e) { }
 }
 
 function handleDocument(document: Document) {
@@ -61,7 +53,6 @@ function handleDocument(document: Document) {
 
 /**
  * This appears to be checking the page for anything that might be playing a video.
- * Is it even running????
  */
 setInterval(() => {
   handleDocument(document);

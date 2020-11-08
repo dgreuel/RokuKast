@@ -1,7 +1,8 @@
+import { DetectionMethod } from './detection';
+
 export interface IVideo {
   url: string;
   title: string;
-  detectionMethod: string;
+  detectionMethod: DetectionMethod;
   tabId?: number;
-  timeStamp: number;
 }

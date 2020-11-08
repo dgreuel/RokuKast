@@ -1,6 +1,5 @@
 enum Event {
-    ADD_VIDEO = "add-video",
-    IFRAME = "iframe"
+    ADD_VIDEO = "add-video"
 }
 
 export default Event
