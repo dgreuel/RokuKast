@@ -49,7 +49,11 @@ export const Popup = () => {
               </li>
             ))
             : (
-              <li>None</li>
+              <li>
+                <span className="videoTitle">
+                  None
+                </span>
+              </li>
             )}
         </ul>
       </div>

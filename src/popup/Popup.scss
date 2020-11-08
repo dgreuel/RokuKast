@@ -33,7 +33,7 @@ body {
     margin: 10px;
     height: 180px;
     overflow: auto;
-    padding: 0px;
+    padding: 10px 0px;
     border: 1px solid #ddd;
     width: 90%;
   }
@@ -43,7 +43,6 @@ body {
     justify-content: center;
     align-content: center;
     grid-template-columns: auto 120px 45px 45px;
-    border: 1px solid #fff;
     vertical-align: middle;
 
     &:hover{
@@ -80,7 +79,7 @@ body {
   text-decoration: none;
   &:hover {
     text-decoration: none;
-    color: #fff;
+    color: #90caf9;
   }
   vertical-align: middle;
 }
