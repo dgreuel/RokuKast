@@ -15,7 +15,7 @@ export const Popup = () => {
       <div className="popupContainer">
         <h3>Detected media:</h3>
         <ul>
-          {filteredVideos
+          {(filteredVideos && filteredVideos.length > 0)
             ? filteredVideos.map((video: IVideo, index) => (
               <li key={`${index}-row`}>
                 <span className="videoTitle" title={video.url}>
@@ -48,7 +48,9 @@ export const Popup = () => {
                 </span>
               </li>
             ))
-            : null}
+            : (
+              <li>None</li>
+            )}
         </ul>
       </div>
       <div className="toolbar">
