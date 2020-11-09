@@ -3,28 +3,29 @@ import Event from '../shared/event';
 import { IVideo } from "../shared/video";
 import VideoManager from '../shared/videoManager';
 
-const webRequestListener = new WebRequestListener();
-
 chrome.browserAction.setBadgeBackgroundColor({ color: "#4281F4" })
+
+function updateBadge(tabId: number, videos: IVideo[]) {
+  chrome.browserAction.setBadgeText({
+    text: videos.length ? videos.length + "" : ""
+  });
+}
 
 chrome.tabs.onCreated.addListener(function (tab: chrome.tabs.Tab) {
   VideoManager.onTabChanges(tab.id, (videos: IVideo[]) => {
-    chrome.browserAction.setBadgeText({
-      text: videos.length ? videos.length + "" : ""
-    });
+    updateBadge(tab.id, videos);
   })
 })
 chrome.tabs.onActivated.addListener(function (activeInfo) {
   VideoManager.getVideos(activeInfo.tabId, (videos: IVideo[]) => {
-    chrome.browserAction.setBadgeText({
-      text: videos.length ? videos.length + "" : ""
-    });
+    updateBadge(activeInfo.tabId, videos);
   });
 });
 
 /**
  * Attempt to detect media requests.
  */
+const webRequestListener = new WebRequestListener();
 chrome.webRequest.onBeforeRequest.addListener(
   (webRequest: chrome.webRequest.WebRequestBodyDetails) => {
     webRequestListener.listen(webRequest);
