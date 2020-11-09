@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { sendToRoku as sendToRoku } from "../shared/roku";
 import { IVideo } from "../shared/video";
-import Event from "../shared/event";
+import VideoManager from "../shared/videoManager";
 import "./Popup.scss";
 
 type Props = {
@@ -15,31 +15,19 @@ type State = {
 export default class Popup extends Component<Props, State> {
   constructor(props) {
     super(props);
-    this.handleMessage = this.handleMessage.bind(this);
-    this.getVideos = this.getVideos.bind(this);
-    this.newVideos = this.newVideos.bind(this);
-    this.getVideos();
     this.state = {
       filteredVideos: []
     }
+    const that = this;
+    VideoManager.getVideos(this.props.tabId, (videos: IVideo[]) => {
+      that.setState({ filteredVideos: videos });
+    })
   }
   componentDidMount() {
-    chrome.runtime.onMessage.addListener(this.handleMessage);
-  }
-  private getVideos() {
-    var that = this;
-    chrome.runtime.sendMessage({ type: Event.GET_VIDEOS, tabId: this.props.tabId }, (message) => {
-      that.newVideos(message.videos);
-    });
-  }
-  newVideos(videos: IVideo[]) {
-    console.log(`Retrieved ${videos.length} videos`);
-    this.setState({ filteredVideos: videos });
-  }
-  handleMessage(msg) {
-    if (msg.type === Event.UPDATED_VIDEOS) {
-      this.getVideos();
-    }
+    const that = this;
+    VideoManager.onTabChanges(this.props.tabId, (videos: IVideo[]) => {
+      that.setState({ filteredVideos: videos });
+    })
   }
   render() {
     const filteredVideos = this.state.filteredVideos;

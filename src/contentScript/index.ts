@@ -57,14 +57,3 @@ function handleDocument(document: Document) {
 setInterval(() => {
   handleDocument(document);
 }, 5000);
-
-/**
- * Listen for messages from running extension scripts.
- */
-chrome.runtime.onMessage.addListener((message: any, sender: chrome.runtime.MessageSender, sendResponse) => {
-  console.log(`message received: ${JSON.stringify(message)}`);
-  if (message.type === Event.UPDATED_VIDEOS) {
-    chrome.browserAction.setBadgeText({ text: message.videos.length + "" });
-  }
-  return true;
-});

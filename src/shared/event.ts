@@ -1,7 +1,5 @@
 enum Event {
-    ADD_VIDEO = "add-video",
-    GET_VIDEOS = "get-videos",
-    UPDATED_VIDEOS = "updated-videos"
+    ADD_VIDEO = "add-video"
 }
 
 export default Event

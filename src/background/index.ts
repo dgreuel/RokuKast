@@ -3,15 +3,22 @@ import Event from '../shared/event';
 import { IVideo } from "../shared/video";
 import VideoManager from '../shared/videoManager';
 
-const videoManager = new VideoManager();
-const webRequestListener = new WebRequestListener(videoManager);
+const webRequestListener = new WebRequestListener();
 
 chrome.browserAction.setBadgeBackgroundColor({ color: "#4281F4" })
 
+chrome.tabs.onCreated.addListener(function (tab: chrome.tabs.Tab) {
+  VideoManager.onTabChanges(tab.id, (videos: IVideo[]) => {
+    chrome.browserAction.setBadgeText({
+      text: videos.length ? videos.length + "" : ""
+    });
+  })
+})
 chrome.tabs.onActivated.addListener(function (activeInfo) {
-  const videos = videoManager.getVideos(activeInfo.tabId);
-  chrome.browserAction.setBadgeText({
-    text: videos.length ? videos.length + "" : ""
+  VideoManager.getVideos(activeInfo.tabId, (videos: IVideo[]) => {
+    chrome.browserAction.setBadgeText({
+      text: videos.length ? videos.length + "" : ""
+    });
   });
 });
 
@@ -42,17 +49,8 @@ chrome.runtime.onMessage.addListener((message: any, sender: chrome.runtime.Messa
         detectionMethod: message.video.detectionMethod,
         tabId: sender.tab ? sender.tab.id : undefined
       };
-      videoManager.pushVideo(video);
+      VideoManager.pushVideo(video);
     }
-  } else if (message.type === Event.GET_VIDEOS) {
-    const videos = videoManager.getVideos(message.tabId);
-    sendResponse({ videos: videos });
-  } else if (message.type === Event.UPDATED_VIDEOS) {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      var activeTab = tabs[0];
-      const videos = videoManager.getVideos(activeTab.id)
-      chrome.browserAction.setBadgeText({ text: videos.length + "" });
-    });
   }
   return true;
 });

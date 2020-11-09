@@ -1,38 +1,40 @@
 import _ from "lodash";
 import { IVideo } from "./video";
-import Event from "./event";
 
-/**
- * Module handles storage and retrieval of videos found across all tabs.
- */
-
-const VIDEOS_STORAGE_KEY = "videos";
+function makeTabKey(tabId: number) {
+    return tabId + "_videos";
+}
 
 export default class VideoManager {
-    getVideos(tabId?: number): IVideo[] {
-        let videos: IVideo[] = JSON.parse(localStorage.getItem(VIDEOS_STORAGE_KEY));
-        if (typeof tabId === "number")
-            videos = videos.filter((video: IVideo) => video.tabId === tabId)
-        return videos;
+    static getVideos(tabId: number, callback: (videos: IVideo[]) => void) {
+        const tabKey = makeTabKey(tabId);
+        chrome.storage.local.get(tabKey, function (result: IVideo[]) {
+            callback(result.hasOwnProperty(tabKey) ? result[tabKey] : []);
+        });
     }
-    private setVideos(videos: IVideo[]) {
-        localStorage.setItem(VIDEOS_STORAGE_KEY, JSON.stringify(videos));
-    }
-    pushVideo(video: IVideo): void {
-        var that = this;
-        let videos = this.getVideos();
-        videos.unshift(video);
-        //why?
-        videos = _.uniqBy(
-            videos,
-            (vid) => vid.url,
-        );
-        this.setVideos(videos);
+    static pushVideo(video: IVideo): void {
+        this.getVideos(video.tabId, (videos: IVideo[]) => {
+            videos.unshift(video);
+            //why?
+            videos = _.uniqBy(
+                videos,
+                (vid) => vid.url,
+            );
 
-        //figure out how to communicate with other scripts that we have updated the videos
-        chrome.runtime.sendMessage({
-            type: Event.UPDATED_VIDEOS,
-            videos: videos
-        })
+            const tabKey = makeTabKey(video.tabId);
+            const newValue = {}
+            newValue[tabKey] = videos
+            chrome.storage.local.set(newValue);
+        });
+    }
+    static onTabChanges(tabId: number, callback: (videos: IVideo[]) => void) {
+        const tabKey = makeTabKey(tabId);
+        chrome.storage.onChanged.addListener(function (changes, namespace) {
+            for (var key in changes) {
+                if (key == tabKey) {
+                    callback(changes[key].newValue);
+                }
+            }
+        });
     }
 }
