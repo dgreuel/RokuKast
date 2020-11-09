@@ -8,31 +8,31 @@ import Event from "./event";
 
 const VIDEOS_STORAGE_KEY = "videos";
 
-export function getVideos(tabId?: number): IVideo[] {
-    let videos: IVideo[] = JSON.parse(localStorage.getItem(VIDEOS_STORAGE_KEY));
-    if (typeof tabId === "number")
-        videos = videos.filter((video: IVideo) => video.tabId === tabId)
-    return videos;
-}
+export default class VideoManager {
+    getVideos(tabId?: number): IVideo[] {
+        let videos: IVideo[] = JSON.parse(localStorage.getItem(VIDEOS_STORAGE_KEY));
+        if (typeof tabId === "number")
+            videos = videos.filter((video: IVideo) => video.tabId === tabId)
+        return videos;
+    }
+    private setVideos(videos: IVideo[]) {
+        localStorage.setItem(VIDEOS_STORAGE_KEY, JSON.stringify(videos));
+    }
+    pushVideo(video: IVideo): void {
+        var that = this;
+        let videos = this.getVideos();
+        videos.unshift(video);
+        //why?
+        videos = _.uniqBy(
+            videos,
+            (vid) => vid.url,
+        );
+        this.setVideos(videos);
 
-function setVideos(videos: IVideo[]) {
-    localStorage.setItem(VIDEOS_STORAGE_KEY, JSON.stringify(videos));
-}
-
-export function pushVideo(video: IVideo): void {
-    let videos = getVideos();
-    videos.unshift(video);
-    //why?
-    videos = _.uniqBy(
-        videos,
-        (vid) => vid.url,
-    );
-    setVideos(videos);
-
-    //figure out how to communicate with other scripts that we have updated the videos
-    chrome.runtime.sendMessage({
-        type: Event.UPDATED_VIDEOS,
-        videos: videos
-    })
-    chrome.browserAction.setBadgeText({ text: videos.length + "" });
+        //figure out how to communicate with other scripts that we have updated the videos
+        chrome.runtime.sendMessage({
+            type: Event.UPDATED_VIDEOS,
+            videos: videos
+        })
+    }
 }

@@ -1,13 +1,27 @@
+import WebRequestListener from './requestListener';
 import Event from '../shared/event';
 import { IVideo } from "../shared/video";
-import WebRequestListener from './requestListener';
-import { pushVideo, getVideos } from '../shared/videoManager';
+import VideoManager from '../shared/videoManager';
+
+const videoManager = new VideoManager();
+const webRequestListener = new WebRequestListener(videoManager);
+
+chrome.browserAction.setBadgeBackgroundColor({ color: "#4281F4" })
+
+chrome.tabs.onActivated.addListener(function (activeInfo) {
+  const videos = videoManager.getVideos(activeInfo.tabId);
+  chrome.browserAction.setBadgeText({
+    text: videos.length ? videos.length + "" : ""
+  });
+});
 
 /**
  * Attempt to detect media requests.
  */
 chrome.webRequest.onBeforeRequest.addListener(
-  WebRequestListener,
+  (webRequest: chrome.webRequest.WebRequestBodyDetails) => {
+    webRequestListener.listen(webRequest);
+  },
   {
     urls: ["http://*/*", "https://*/*"],
     types: ["media", "xmlhttprequest"],
@@ -18,8 +32,8 @@ chrome.webRequest.onBeforeRequest.addListener(
 /**
  * Listen for messages from running extension scripts.
  */
-chrome.runtime.onMessage.addListener((message: any, sender: chrome.runtime.MessageSender) => {
-  console.log(`message received: ${message}`)
+chrome.runtime.onMessage.addListener((message: any, sender: chrome.runtime.MessageSender, sendResponse) => {
+  console.log(`message received: ${JSON.stringify(message)}`);
   if (message.type === Event.ADD_VIDEO) {
     {
       const video: IVideo = {
@@ -28,12 +42,15 @@ chrome.runtime.onMessage.addListener((message: any, sender: chrome.runtime.Messa
         detectionMethod: message.video.detectionMethod,
         tabId: sender.tab ? sender.tab.id : undefined
       };
-      pushVideo(video);
+      videoManager.pushVideo(video);
     }
+  } else if (message.type === Event.GET_VIDEOS) {
+    const videos = videoManager.getVideos(message.tabId);
+    sendResponse({ videos: videos });
   } else if (message.type === Event.UPDATED_VIDEOS) {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       var activeTab = tabs[0];
-      const videos = getVideos(activeTab.id)
+      const videos = videoManager.getVideos(activeTab.id)
       chrome.browserAction.setBadgeText({ text: videos.length + "" });
     });
   }
