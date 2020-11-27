@@ -48,6 +48,7 @@ chrome.runtime.onMessage.addListener((message: any, sender: chrome.runtime.Messa
         url: message.video.url,
         title: message.video.title,
         detectionMethod: message.video.detectionMethod,
+        timestamp: new Date().getTime(),
         tabId: sender.tab ? sender.tab.id : undefined
       };
       VideoManager.pushVideo(video);

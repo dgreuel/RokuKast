@@ -15,7 +15,8 @@
     "target": "es5",
     "types": [
       "chrome",
-      "react"
+      "react",
+      "jest"
     ]
   },
   "include": [

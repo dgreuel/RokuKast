@@ -9,36 +9,36 @@ type Props = {
 }
 
 type State = {
-  filteredVideos: IVideo[]
+  videosForTab: IVideo[]
 }
 
 export default class Popup extends Component<Props, State> {
   constructor(props) {
     super(props);
     this.state = {
-      filteredVideos: []
+      videosForTab: []
     }
     const that = this;
     VideoManager.getVideos(this.props.tabId, (videos: IVideo[]) => {
-      that.setState({ filteredVideos: videos });
+      that.setState({ videosForTab: videos });
     })
   }
   componentDidMount() {
     const that = this;
     VideoManager.onTabChanges(this.props.tabId, (videos: IVideo[]) => {
-      that.setState({ filteredVideos: videos });
+      that.setState({ videosForTab: videos });
     })
   }
   render() {
-    const filteredVideos = this.state.filteredVideos;
+    const videosForTab = this.state.videosForTab;
     console.log(`making the popup for tab ${this.props.tabId}!`)
     return (
       <>
         <div className="popupContainer">
           <h3>Detected media:</h3>
           <ul>
-            {(filteredVideos && filteredVideos.length > 0)
-              ? filteredVideos.map((video: IVideo, index) => (
+            {(videosForTab && videosForTab.length > 0)
+              ? videosForTab.map((video: IVideo, index) => (
                 <li key={`${index}-row`}>
                   <span className="videoTitle" title={video.url}>
                     {video.title || "unknown"}

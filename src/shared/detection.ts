@@ -2,8 +2,8 @@ import { IVideo } from './video';
 import _ from 'lodash';
 
 export enum DetectionMethod {
-    MEDIA_REQUEST,
-    VIDEO_TAG
+    MEDIA_REQUEST = "media request",
+    VIDEO_TAG = "video tag"
 }
 
 /**
@@ -33,6 +33,8 @@ export function detectVideo(url: string, tab: chrome.tabs.Tab, detectionMethod: 
         return;
     }
 
+    console.log("detected: " + url);
+
     let title = tab.title;
     if (!title) {
         title = url.split("/").pop();
@@ -42,6 +44,7 @@ export function detectVideo(url: string, tab: chrome.tabs.Tab, detectionMethod: 
         tabId: tab.id,
         title: title,
         detectionMethod: detectionMethod,
+        timestamp: new Date().getTime(),
         url: url
     };
 }

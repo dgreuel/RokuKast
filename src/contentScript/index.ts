@@ -16,7 +16,8 @@ function handleVideoElement(videoElement: HTMLVideoElement) {
         0,
         document.title.length < 100 ? document.title.length : 99,
       ),
-      url: videoUrl
+      url: videoUrl,
+      timestamp: new Date().getTime()
     };
     if (!!video.url && !!video.title) {
       chrome.runtime.sendMessage({ type: Event.ADD_VIDEO, video });
