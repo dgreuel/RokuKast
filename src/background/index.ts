@@ -21,6 +21,18 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
     updateBadge(activeInfo.tabId, videos);
   });
 });
+chrome.tabs.onRemoved.addListener(function (tabId: number, removeInfo: chrome.tabs.TabRemoveInfo) {
+  console.log(`Tab ${tabId} is closing, removing stored videos for tab`);
+  VideoManager.pruneVideos(tabId, () => {
+    console.log(`Videos for tab ${tabId} removed!`);
+  });
+})
+chrome.windows.onRemoved.addListener(function (windowid) {
+  console.log("Window is closing, clearing storage");
+  chrome.storage.local.clear(function () {
+    console.log("Storage cleared!")
+  });
+})
 
 /**
  * Attempt to detect media requests.

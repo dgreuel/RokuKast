@@ -53,4 +53,8 @@ export default class VideoManager {
             }
         });
     }
+    static pruneVideos(tabId: number, callback: () => void) {
+        const tabKey = makeTabKey(tabId);
+        chrome.storage.local.remove(tabKey, callback);
+    }
 }
