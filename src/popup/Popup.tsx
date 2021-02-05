@@ -40,34 +40,43 @@ export default class Popup extends Component<Props, State> {
             {(videosForTab && videosForTab.length > 0)
               ? videosForTab.map((video: IVideo, index) => (
                 <li key={`${index}-row`}>
-                  <span className="videoTitle" title={video.url}>
-                    {video.title || "unknown"}
-                  </span>
-                  <span className="detectionMethod">
-                    {video.detectionMethod}
-                  </span>
-                  <span>
-                    <a
-                      key={`${index}-download`}
-                      href={video.url}
-                      title="Download"
-                      target="_blank"
-                    >
-                      <i className="material-icons">file_download</i>
-                    </a>
-                  </span>
-                  <span>
-                    <a
-                      key={`${index}-cast`}
-                      onClick={sendToRoku.bind(this, {
-                        title: video.title,
-                        sentLink: video.url,
-                      })}
-                      title="Cast"
-                    >
-                      <i className="material-icons">cast</i>
-                    </a>
-                  </span>
+                  <div className="listItem">
+                    <div className="grid">
+                      <span className="videoTitle" title={video.url}>
+                        {video.title || "unknown"}
+                      </span>
+                      <span className="detectionMethod">
+                        {video.detectionMethod}
+                      </span>
+                      <span>
+                        <a
+                          key={`${index}-download`}
+                          href={video.url}
+                          title="Download"
+                          target="_blank"
+                        >
+                          <i className="material-icons">file_download</i>
+                        </a>
+                      </span>
+                      <span>
+                        <a
+                          key={`${index}-cast`}
+                          onClick={sendToRoku.bind(this, {
+                            title: video.title,
+                            sentLink: video.url,
+                          })}
+                          title="Cast"
+                        >
+                          <i className="material-icons">cast</i>
+                        </a>
+                      </span>
+                    </div>
+                    <div>
+                      <span className="videoUrl">
+                        {video.url}
+                      </span>
+                    </div>
+                  </div>
                 </li>
               ))
               : (

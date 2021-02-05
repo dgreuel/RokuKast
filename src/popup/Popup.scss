@@ -4,7 +4,7 @@ $background-color: #fff;
 // Chrome applies an 8px margin by default (gross).
 body {
   margin: 0px;
-  height: 180px;
+  height: 200px;
   width: 680px;
   background-color: $background-color;
 }
@@ -39,36 +39,48 @@ body {
   }
 
   & li {
-    display: inline-grid;
     justify-content: center;
     align-content: center;
-    grid-template-columns: auto 120px 45px 45px;
-    vertical-align: middle;
     width: 100%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    vertical-align: middle;
 
-    &:hover{
-      background-color: #eee;
-    }
+    & .listItem {
+      padding: 5px 10px;
 
-    & span.videoTitle {
-      font-size: 15px;
-      vertical-align: middle;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      width: 360px;
-      white-space: nowrap;
-    }
-    & span.detectionMethod {
-      font-style: italic;
-      font-size: 14px;
-      vertical-align: middle;
-      padding: 10px;
-      text-align: center;
-    }
-    & span {
-      padding: 10px;
-      vertical-align: middle;
-      line-height: 24px;
+      & div {
+        width: 100%;
+        overflow: hidden;
+      }
+
+      & .grid {
+        display: inline-grid;
+        vertical-align: middle;
+        grid-template-columns: auto 120px 45px 45px;
+      }
+
+      &:hover{
+        background-color: #eee;
+      }
+
+      & span.videoTitle {
+        font-size: 15px;
+        width: 360px;
+      }
+      & span.videoUrl {
+        font-size: 10px;
+        color: #4281f4;
+      }
+      & span.detectionMethod {
+        font-style: italic;
+        font-size: 14px;
+        text-align: center;
+      }
+      & span {
+        overflow: hidden;
+        line-height: 24px;
+      }
     }
   }
 }
