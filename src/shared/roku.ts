@@ -1,12 +1,18 @@
+import { IVideo, HeaderRequirement } from './video'
+
 interface RokuRequest {
   title: string;
   sentLink: string;
+  requiredHeaders?: Map<string, string>;
 }
 
 enum Format {
   HLS = "hls",
   MP4 = "mp4"
 }
+
+const ROKU_TEST_CHANNEL_ID = "63218"
+const PLAY_ON_ROKU_CHANNEL_ID = "15985"
 
 /**
  * Post the video request information to the Roku
@@ -15,16 +21,34 @@ enum Format {
  * @param format the video format
  */
 function sendXhrRequest(rokuRequest: RokuRequest, ip: string, format: Format) {
+  // TODO: this is kinda messy
+
   const xhr = new XMLHttpRequest();
   xhr.open("HEAD", rokuRequest.sentLink, true);
   xhr.onload = () => {
     const u = encodeURIComponent(xhr.responseURL);
     const videoName = encodeURIComponent(rokuRequest.title);
-    //not sure where this is documented, but would be good to know
-    const url = `http://${ip}:8060/input/15985?t=v&u=${u}&videoName=${videoName}&videoFormat=${format}`;
+
+    let url: string;
+    if (rokuRequest.requiredHeaders.size > 0) {
+      //play on roku doesn't seem to support passing in headers, so we need to use the test channel for that
+      const headers = encodeURIComponent(JSON.stringify(rokuRequest.requiredHeaders));
+      url = `http://${ip}:8060/launch/${ROKU_TEST_CHANNEL_ID}?url=${u}&fmt=Auto&headers=${headers}`;
+    } else {
+      //preferred method, does not require adding a channel to your roku
+      url = `http://${ip}:8060/input/${PLAY_ON_ROKU_CHANNEL_ID}?t=v&u=${u}&videoName=${videoName}&videoFormat=${format}`
+    }
+    console.log(`Sending ${url}`);
+
     const request = new XMLHttpRequest();
     request.open("POST", url, true);
     request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    request.onload = () => {
+      console.log(`Destination IP is loading URL: ${url}`)
+    }
+    request.onload = () => {
+      console.log(`Failed to send URL to destination IP: ${url}`)
+    }
     request.send("");
   };
   xhr.send(null);
@@ -47,6 +71,20 @@ function getVideoFormat(rokuRequest: RokuRequest): Format {
     isHLS = true;
   }
   return isHLS ? Format.HLS : Format.MP4;
+}
+
+export function sendVideoToRoku(video: IVideo) {
+  const headers: Map<string, string> = new Map();
+  for (let requirement of video.requirements) {
+    if (requirement instanceof HeaderRequirement) {
+      headers.set(requirement.key, requirement.value)
+    }
+  }
+  sendToRoku({
+    title: video.title,
+    sentLink: video.url,
+    requiredHeaders: headers
+  })
 }
 
 /**

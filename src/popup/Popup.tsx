@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { sendToRoku as sendToRoku } from "../shared/roku";
+import { sendVideoToRoku } from "../shared/roku";
 import { IVideo } from "../shared/video";
 import VideoManager from "../shared/videoManager";
 import "./Popup.scss";
@@ -42,7 +42,7 @@ export default class Popup extends Component<Props, State> {
                 <li key={`${index}-row`}>
                   <div className="listItem">
                     <div className="grid">
-                      <span className="videoTitle" title={video.url}>
+                      <span className="videoTitle">
                         {video.title || "unknown"}
                       </span>
                       <span className="detectionMethod">
@@ -61,10 +61,7 @@ export default class Popup extends Component<Props, State> {
                       <span>
                         <a
                           key={`${index}-cast`}
-                          onClick={sendToRoku.bind(this, {
-                            title: video.title,
-                            sentLink: video.url,
-                          })}
+                          onClick={sendVideoToRoku.bind(this, video)}
                           title="Cast"
                         >
                           <i className="material-icons">cast</i>
@@ -72,7 +69,7 @@ export default class Popup extends Component<Props, State> {
                       </span>
                     </div>
                     <div>
-                      <span className="videoUrl">
+                      <span className="videoUrl" title={video.url}>
                         {video.url}
                       </span>
                     </div>

@@ -24,3 +24,6 @@ In order to use the Cast function, you must configure your Roku's IP address on 
 ## Credits
 
 This project is based on [RokuCast](https://github.com/pranav-prakash/RokuCast/) by Pranav Prakash and [chrome-extension-react-typescript-boilerplate](https://github.com/martellaj/chrome-extension-react-typescript-boilerplate) by Joe Martella.
+
+## Headers
+Looks like there are cases where video URLs will not load unless an expected origin header is present. Migth be able to send that header by passing HttpHeaders param to roku??
