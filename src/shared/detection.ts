@@ -1,4 +1,4 @@
-import { IVideo, VideoRequirement, HeaderRequirement } from './video';
+import { IVideo, HeaderRequirement } from './video';
 import _ from 'lodash';
 
 export enum DetectionMethod {
@@ -29,13 +29,10 @@ function detectMediaRequest(url: string) {
     }
 }
 
-function getRequirements(url: string): VideoRequirement[] {
-    const requirements: VideoRequirement[] = []
-    if (url.indexOf("://hqq.to") > -1) {
-        requirements.push({
-            key: "Origin",
-            value: "https://hqq.to"
-        })
+function getRequirements(url: string): HeaderRequirement[] {
+    const requirements: HeaderRequirement[] = []
+    if (true) {
+        requirements.push({ key: "Origin", value: "https://hqq.to" })
     }
     return requirements;
 }
@@ -52,14 +49,16 @@ export function detectVideo(url: string, tab: chrome.tabs.Tab, detectionMethod: 
         title = url.split("/").pop();
     }
 
-
-
-    return {
+    const video = {
         tabId: tab.id,
         title: title,
         detectionMethod: detectionMethod,
         timestamp: new Date().getTime(),
         url: url,
-        requirements: getRequirements(url)
+        requiredHeaders: getRequirements(url)
     };
+
+    console.dir(video);
+
+    return video;
 }
