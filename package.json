@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "jquery": "^3.4.0",
-    "lodash": "^4.17.13",
+    "lodash": "^4.17.21",
     "react": "^16.2.0",
     "react-dom": "^16.2.0"
   },
