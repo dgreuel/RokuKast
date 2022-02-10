@@ -20,7 +20,7 @@
     "babel-loader": "^8.0.6",
     "css-loader": "^0.28.11",
     "file-loader": "^3.0.1",
-    "node-sass": "^4.13.0",
+    "node-sass": "^7.0.0",
     "pnp-webpack-plugin": "^1.5.0",
     "sass-loader": "^6.0.7",
     "style-loader": "^0.20.3",
